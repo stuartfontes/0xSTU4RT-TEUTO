@@ -1,6 +1,5 @@
 ﻿[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-
-$caminho_env = ""
+$caminho_env = "C:\Users\mainj\OneDrive\Área de Trabalho\PASTADEVERIFICACAOBACKUPS"
 $arquivo_env = Join-Path -Path $caminho_env -ChildPath ".env"
 
 function SairComPausa {
@@ -58,8 +57,8 @@ function ValidarEnv {
         SairComPausa
     }
 
-    if (-not $GUID_PADRAO -or -not $IP_PADRAO -or -not $PASTA_COMPARTILHADA) {
-        write-host "[!] .env incompleta (GUID_PADRAO / IP_PADRAO / PASTA_COMPARTILHADA), encerrando" -ForegroundColor Yellow
+    if (-not $SERIAL_PADRAO -or -not $IP_PADRAO -or -not $PASTA_COMPARTILHADA) {
+        write-host "[!] .env incompleta (SERIAL_PADRAO / IP_PADRAO / PASTA_COMPARTILHADA), encerrando" -ForegroundColor Yellow
         SairComPausa
     }
 
@@ -77,8 +76,13 @@ function ValidarPendrive {
         SairComPausa
     }
 
-    if ($pen_drive.UniqueId -ne $GUID_PADRAO) {
-        write-host "[!] GUID nao correspondente`n[!] encerrando..." -ForegroundColor Yellow
+    $disco  = Get-Partition -DriveLetter $pen_drive.DriveLetter -ErrorAction SilentlyContinue | Get-Disk -ErrorAction SilentlyContinue
+    $serial = "$($disco.SerialNumber)".Trim()
+
+    $seriaisValidos = $SERIAL_PADRAO -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
+    if (-not $serial -or $serial -notin $seriaisValidos) {
+        write-host "[!] serial do pendrive não autorizado`n[!] encerrando..." -ForegroundColor Yellow
         SairComPausa
     }
 
