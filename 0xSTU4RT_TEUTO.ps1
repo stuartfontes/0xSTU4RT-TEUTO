@@ -1,5 +1,5 @@
 ﻿[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$caminho_env = "C:\Users\mainj\OneDrive\Área de Trabalho\PASTADEVERIFICACAOBACKUPS"
+$caminho_env = ""
 $arquivo_env = Join-Path -Path $caminho_env -ChildPath ".env"
 
 function SairComPausa {
