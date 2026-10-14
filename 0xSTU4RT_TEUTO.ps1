@@ -1,5 +1,5 @@
 ﻿[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$caminho_env = ""
+$caminho_env = "c:\users\av\desktop\0xSTU4RT"
 $arquivo_env = Join-Path -Path $caminho_env -ChildPath ".env"
 
 function SairComPausa {
