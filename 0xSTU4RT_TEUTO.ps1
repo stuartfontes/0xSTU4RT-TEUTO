@@ -132,7 +132,7 @@ function CriarUsuario {
 
     $option   = read-host "`n[U] Digite a opção desejada:`n[1] Para criar acesso`n[2] Para desbloquear acesso`n"
     $user     = read-host "[U] Digite a matrícula do usuário"
-    $password = read-host "[U] Digite a senha para o usuário" -AsSecureString
+    $password = read-host "[U] Digite a senha para o usuário`n[U] PS: Deve conter ao menos oito digitos / Letra maiúscula / Letra minúscula" -AsSecureString
 
     switch ($option.Trim()) {
         "1" { 
@@ -140,7 +140,7 @@ function CriarUsuario {
 
             if (get-localuser -name $user -ErrorAction SilentlyContinue) {
                 write-host "[!] erro: a matrícula $user já possui cadastro" -ForegroundColor Yellow
-                return
+                CriarUsuario
             }
 
             $grupo = "AntaresVision.PowerUser"
@@ -159,15 +159,16 @@ function CriarUsuario {
 
             if (-not $usuarioObj) {
                 write-host "[!] erro: a matrícula $user não existe" -ForegroundColor Yellow
-                return
+                CriarUsuario
             }
 
             if ($usuarioObj.Enabled) {
                 write-host "[!] a matrícula $user já está desbloqueada" -ForegroundColor Yellow
-                return
+                CriarUsuario
             }
 
             Enable-LocalUser -Name $user
+            Set-localuser -Name $user -Password $password
             write-host "[+] sucesso! usuário $user foi desbloqueado" -ForegroundColor Green
 
             GerarEEnviarLog -user $user -acao "Desbloqueio" -resultado "Sucesso"
